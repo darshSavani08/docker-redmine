@@ -10,8 +10,6 @@ services:
   #   volumes:
   #     - /srv/docker/redmine/mysql:/var/lib/mysql
   redmine:
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
     build: ./
     image: sameersbn/redmine:5.0.4
     # depends_on:
@@ -61,6 +59,8 @@ services:
 
     ports:
       - "10083:80"
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
     volumes:
       - /Users/snehkothari/Documents/docker-redmine/container/data:/home/redmine/data
       - /Users/snehkothari/Documents/docker-redmine/container/redmine-logs:/var/log/redmine
