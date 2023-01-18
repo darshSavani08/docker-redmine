@@ -1,26 +1,25 @@
 version: '2'
 
 services:
-  postgresql:
-    image: sameersbn/postgresql:9.6-4
-    environment:
-      - DB_USER=redmine
-      - DB_PASS=password
-      - DB_NAME=redmine_production
-    volumes:
-      - /srv/docker/redmine/postgresql:/var/lib/postgresql
-
+  # mysql:
+  #   image: sameersbn/mysql:5.7.22-1
+  #   environment:
+  #     - DB_USER=redmine
+  #     - DB_PASS=password
+  #     - DB_NAME=redmine_production
+  #   volumes:
+  #     - /srv/docker/redmine/mysql:/var/lib/mysql
   redmine:
     build: ./
     image: sameersbn/redmine:5.0.4
-    depends_on:
-      - postgresql
+    # depends_on:
+    #   - mysql
     environment:
       - TZ=Asia/Kolkata
 
-      - DB_ADAPTER=postgresql
-      - DB_HOST=postgresql
-      - DB_PORT=5432
+      - DB_ADAPTER=mysql2
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
       - DB_USER=redmine
       - DB_PASS=password
       - DB_NAME=redmine_production
@@ -40,12 +39,12 @@ services:
       - REDMINE_BACKUP_EXPIRY=
       - REDMINE_BACKUP_TIME=
 
-      - SMTP_ENABLED=false
+      - SMTP_ENABLED=true
       - SMTP_METHOD=smtp
-      - SMTP_DOMAIN=www.example.com
+      - SMTP_DOMAIN=smtp.gmail.com
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=587
-      - SMTP_USER=mailer@example.com
+      - SMTP_USER=test@gmail.com
       - SMTP_PASS=password
       - SMTP_STARTTLS=true
       - SMTP_AUTHENTICATION=:login
@@ -61,5 +60,5 @@ services:
     ports:
       - "10083:80"
     volumes:
-      - /srv/docker/redmine/redmine:/home/redmine/data
-      - /srv/docker/redmine/redmine-logs:/var/log/redmine
+      - /Users/snehkothari/Documents/docker-redmine/container/data:/home/redmine/data
+      - /Users/snehkothari/Documents/docker-redmine/container/redmine-logs:/var/log/redmine
