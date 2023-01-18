@@ -10,6 +10,8 @@ services:
   #   volumes:
   #     - /srv/docker/redmine/mysql:/var/lib/mysql
   redmine:
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
     build: ./
     image: sameersbn/redmine:5.0.4
     # depends_on:
