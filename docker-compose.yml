@@ -1,4 +1,8 @@
-version: '2'
+version: '3.8'
+
+secrets:
+  pass :
+    file : ./db_pass.txt
 
 services:
   # mysql:
@@ -9,21 +13,26 @@ services:
   #     - DB_NAME=redmine_production
   #   volumes:
   #     - /srv/docker/redmine/mysql:/var/lib/mysql
+  
+    
   redmine:
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
     build: ./
     image: sameersbn/redmine:5.0.4
+    network_mode: bridge
     # depends_on:
     #   - mysql
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    
     environment:
+      
       - TZ=Asia/Kolkata
 
       - DB_ADAPTER=mysql2
-      - DB_HOST=host.docker.internal
+      - DB_HOST=10.0.2.15
       - DB_PORT=3306
       - DB_USER=redmine
-      - DB_PASS=darsh@Savani1
+      - DB_PASS_FILE=/run/secrets/pass
       - DB_NAME=redmine_production
       - DB_SSL_MODE=prefer
 
@@ -45,11 +54,11 @@ services:
       - SMTP_METHOD=smtp
       - SMTP_DOMAIN=smtp.gmail.com
       - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=test@gmail.com
-      - SMTP_PASS=password
+      - SMTP_PORT=465
+      - SMTP_USER=cloudadmin@shrinesoft.com
+      - SMTP_PASS=King@9601
       - SMTP_STARTTLS=true
-      - SMTP_AUTHENTICATION=:login
+      - SMTP_AUTHENTICATION=:plain
 
       - IMAP_ENABLED=false
       - IMAP_HOST=imap.gmail.com
@@ -58,7 +67,8 @@ services:
       - IMAP_PASS=password
       - IMAP_SSL=true
       - IMAP_INTERVAL=30
-
+    secrets:
+      - pass
     ports:
       - "10083:80"
     volumes:
