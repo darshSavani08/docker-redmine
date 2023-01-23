@@ -21,6 +21,11 @@ file_env() {
 }
 
 file_env "DB_PASS"
+file_env "DB_NAME"
+file_env "DB_USER"
+
+file_env "SMTP_USER"
+file_env "SMTP_PASS"
 
 source ${REDMINE_RUNTIME_ASSETS_DIR}/functions
 

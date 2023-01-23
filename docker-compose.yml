@@ -3,6 +3,14 @@ version: '3.8'
 secrets:
   pass :
     file : ./db_pass.txt
+  db_user :
+    file : ./db_user.txt
+  db_name : 
+    file : ./db_name.txt
+  smtp_user :
+    file : ./smtp_user.txt
+  smtp_pass : 
+    file : ./smtp_pass.txt    
 
 services:
   # mysql:
@@ -31,9 +39,9 @@ services:
       - DB_ADAPTER=mysql2
       - DB_HOST=10.0.2.15
       - DB_PORT=3306
-      - DB_USER=redmine
+      - DB_USER_FILE=/run/secrets/db_user
       - DB_PASS_FILE=/run/secrets/pass
-      - DB_NAME=redmine_production
+      - DB_NAME_FILE=/run/secrets/db_name
       - DB_SSL_MODE=prefer
 
       - REDMINE_PORT=10083
@@ -54,9 +62,9 @@ services:
       - SMTP_METHOD=smtp
       - SMTP_DOMAIN=smtp.gmail.com
       - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=465
-      - SMTP_USER=cloudadmin@shrinesoft.com
-      - SMTP_PASS=King@9601
+      - SMTP_PORT=587
+      - SMTP_USER_FILE=/run/secrets/smtp_user
+      - SMTP_PASS_FILE=/run/secrets/smtp_pass
       - SMTP_STARTTLS=true
       - SMTP_AUTHENTICATION=:plain
 
@@ -68,7 +76,12 @@ services:
       - IMAP_SSL=true
       - IMAP_INTERVAL=30
     secrets:
+      - db_user
       - pass
+      - db_name
+      - smtp_user
+      - smtp_pass 
+      
     ports:
       - "10083:80"
     volumes:
