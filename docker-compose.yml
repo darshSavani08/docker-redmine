@@ -10,25 +10,21 @@ secrets:
   smtp_user :
     file : ./smtp_user.txt
   smtp_pass : 
-    file : ./smtp_pass.txt    
+    file : ./smtp_pass.txt 
+
+volumes:
+  redfile:
+    name: ${REDMINE_FILE}
+  logfile:
+    name: ${REDMINE_LOG}    
 
 services:
-  # mysql:
-  #   image: sameersbn/mysql:5.7.22-1
-  #   environment:
-  #     - DB_USER=redmine
-  #     - DB_PASS=password
-  #     - DB_NAME=redmine_production
-  #   volumes:
-  #     - /srv/docker/redmine/mysql:/var/lib/mysql
-  
     
   redmine:
     build: ./
     image: sameersbn/redmine:5.0.4
     network_mode: bridge
-    # depends_on:
-    #   - mysql
+    
     extra_hosts:
     - "host.docker.internal:host-gateway"
     
@@ -84,8 +80,8 @@ services:
       
     ports:
       - "10083:80"
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
+   
     volumes:
-      - /home/darsh/Documents/redmine:/home/redmine/data
-      - /home/darsh/Documents/redmine_log:/var/log/redmine
+      - redfile:/home/redmine/data
+      - logfile:/var/log/redmine
+    
