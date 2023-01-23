@@ -351,7 +351,7 @@ redmine_configure_email_delivery() {
       ${REDMINE_CONFIG}
   else
     echo "Configuring redmine::email_delivery..."
-
+    echo ${SMTP_PASS}
     if [[ -z "${SMTP_USER}" ]]; then
       exec_as_redmine sed -i \
         -e '/{{SMTP_USER}}/d' \
