@@ -84,6 +84,8 @@ services:
       
     ports:
       - "10083:80"
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
     volumes:
       - /home/darsh/Documents/redmine:/home/redmine/data
       - /home/darsh/Documents/redmine_log:/var/log/redmine
