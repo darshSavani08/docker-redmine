@@ -1,28 +1,43 @@
-version: '2'
+version: '3.8'
+
+secrets:
+  pass :
+    file : ./db_pass.txt
+  db_user :
+    file : ./db_user.txt
+  db_name : 
+    file : ./db_name.txt
+  smtp_user :
+    file : ./smtp_user.txt
+  smtp_pass : 
+    file : ./smtp_pass.txt 
+
+volumes:
+  redfile:
+    name: ${REDMINE_FILE}
+  logfile:
+    name: ${REDMINE_LOG}    
 
 services:
-  # mysql:
-  #   image: sameersbn/mysql:5.7.22-1
-  #   environment:
-  #     - DB_USER=redmine
-  #     - DB_PASS=password
-  #     - DB_NAME=redmine_production
-  #   volumes:
-  #     - /srv/docker/redmine/mysql:/var/lib/mysql
+    
   redmine:
     build: ./
     image: sameersbn/redmine:5.0.4
-    # depends_on:
-    #   - mysql
+    network_mode: bridge
+    
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    
     environment:
+      
       - TZ=Asia/Kolkata
 
       - DB_ADAPTER=mysql2
-      - DB_HOST=host.docker.internal
+      - DB_HOST=10.0.2.15
       - DB_PORT=3306
-      - DB_USER=redmine
-      - DB_PASS=password
-      - DB_NAME=redmine_production
+      - DB_USER_FILE=/run/secrets/db_user
+      - DB_PASS_FILE=/run/secrets/pass
+      - DB_NAME_FILE=/run/secrets/db_name
       - DB_SSL_MODE=prefer
 
       - REDMINE_PORT=10083
@@ -44,10 +59,10 @@ services:
       - SMTP_DOMAIN=smtp.gmail.com
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=587
-      - SMTP_USER=test@gmail.com
-      - SMTP_PASS=password
+      - SMTP_USER_FILE=/run/secrets/smtp_user
+      - SMTP_PASS_FILE=/run/secrets/smtp_pass
       - SMTP_STARTTLS=true
-      - SMTP_AUTHENTICATION=:login
+      - SMTP_AUTHENTICATION=:plain
 
       - IMAP_ENABLED=false
       - IMAP_HOST=imap.gmail.com
@@ -56,11 +71,17 @@ services:
       - IMAP_PASS=password
       - IMAP_SSL=true
       - IMAP_INTERVAL=30
-
+    secrets:
+      - db_user
+      - pass
+      - db_name
+      - smtp_user
+      - smtp_pass 
+      
     ports:
       - "10083:80"
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
+   
     volumes:
-      - /Users/snehkothari/Documents/docker-redmine/container/data:/home/redmine/data
-      - /Users/snehkothari/Documents/docker-redmine/container/redmine-logs:/var/log/redmine
+      - redfile:/home/redmine/data
+      - logfile:/var/log/redmine
+    

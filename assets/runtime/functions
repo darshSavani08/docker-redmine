@@ -205,8 +205,7 @@ redmine_check_database_connection() {
 
   case ${DB_ADAPTER} in
     mysql2)
-      echo "mysqladmin -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password='${DB_PASS}' status"
-      prog="mysqladmin -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password='${DB_PASS}' status"
+      prog="mysqladmin -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASS} status"
       ;;
     postgresql)
       prog=$(find /usr/lib/postgresql/ -name pg_isready)
@@ -217,7 +216,7 @@ redmine_check_database_connection() {
       prog="true"
       ;;
   esac
-  timeout=25
+  timeout=60
   while ! exec_as_redmine ${prog} >/dev/null 2>&1
   do
     timeout=$((timeout - 1))
@@ -351,7 +350,7 @@ redmine_configure_email_delivery() {
       ${REDMINE_CONFIG}
   else
     echo "Configuring redmine::email_delivery..."
-
+    
     if [[ -z "${SMTP_USER}" ]]; then
       exec_as_redmine sed -i \
         -e '/{{SMTP_USER}}/d' \
