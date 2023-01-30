@@ -205,6 +205,7 @@ redmine_check_database_connection() {
 
   case ${DB_ADAPTER} in
     mysql2)
+      echo "mysqladmin -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASS} status"
       prog="mysqladmin -h ${DB_HOST} -P ${DB_PORT} -u ${DB_USER} --password=${DB_PASS} status"
       ;;
     postgresql)
@@ -216,7 +217,7 @@ redmine_check_database_connection() {
       prog="true"
       ;;
   esac
-  timeout=60
+  timeout=25
   while ! exec_as_redmine ${prog} >/dev/null 2>&1
   do
     timeout=$((timeout - 1))
